@@ -24,24 +24,17 @@ const App = () => {
         <img src={SearchIcon} alt="searchicon" onClick={() => {}} />
       </div>
 
-      <div className="container">
-        <div className="movie">
-          <div>
-            <p>{item.Year}</p>
-          </div>
-          <div>
-            {" "}
-            <img
-              src={item.Poster ?? "https://via.placeholder.com/400"}
-              alt={item.Title}
-            />
-          </div>
-          <div>
-            <span>{item.Type}</span>
-            <h3>{item.Title}</h3>
-          </div>
+      {movies?.length > 0 ? (
+        <div className="container">
+          {movies.map((item) => {
+            <MovieCard item={item} />;
+          })}
         </div>
-      </div>
+      ) : (
+        <div className="empty">
+          <h2>No movies found</h2>
+        </div>
+      )}
     </div>
   );
 };
