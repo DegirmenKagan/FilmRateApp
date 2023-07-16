@@ -1,16 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import SearchIcon from "./search.svg";
+import MovieCard from "./MovieCard";
 
 const App = () => {
+  const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [errorText, setErrorText] = useState("");
   const searchMovies = async (title) => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}&s=${title}`);
-    const data = await response.json();
+    setErrorText("");
+    if (!title) {
+      setErrorText("Please input a title.");
+      return;
+    }
+    await fetch(`${process.env.REACT_APP_API_URL}&s=${title}`)
+      .then(async (response) => {
+        const data = await response.json();
+        setMovies(data.Search);
+      })
+      .catch((error) => console.log(error));
   };
-
-  useEffect(() => {
-    // searchMovies("baby driver");
-  }, []);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchMovies(searchTerm);
+    }
+  };
 
   return (
     <div className="app">
@@ -18,17 +32,27 @@ const App = () => {
       <div className="search">
         <input
           placeholder="Search for movies"
-          value={"baby driver"}
-          onClick={() => {}}
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          onKeyDown={handleKeyDown}
         />
-        <img src={SearchIcon} alt="searchicon" onClick={() => {}} />
+        <img
+          src={SearchIcon}
+          alt="searchicon"
+          onClick={() => {
+            searchMovies(searchTerm);
+          }}
+        />
       </div>
+      {errorText ? <h3 className="errorText">{errorText}</h3> : <></>}
 
       {movies?.length > 0 ? (
         <div className="container">
-          {movies.map((item) => {
-            <MovieCard item={item} />;
-          })}
+          {movies.map((item, index) => (
+            <MovieCard item={item} key={"_" + index} />
+          ))}
         </div>
       ) : (
         <div className="empty">

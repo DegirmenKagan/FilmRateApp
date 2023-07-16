@@ -74,6 +74,11 @@ h1 {
   cursor: pointer;
 }
 
+.errorText {
+  color: red;
+  font-style: italic;
+}
+
 /* .search button {
   padding: 20px 40px;
   border-radius: 0.5rem;
